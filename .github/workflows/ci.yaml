@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate repository structure
+        run: |
+          test -f README.md
+          echo "README.md found."
+
+      - name: Run Go tests if a Go module exists
+        run: |
+          if [ -f go.mod ]; then
+            go test ./...
+          else
+            echo "No go.mod found, skipping Go tests."
+          fi
